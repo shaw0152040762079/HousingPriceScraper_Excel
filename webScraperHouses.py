@@ -16,7 +16,7 @@ console = Console()
 
 house = Prompt.ask(
     "What Kind of House are you look for? enter the type",
-    choices=["CondoApartments", "House", "RowTownhouse", ]
+    choices=["CondoApartment", "House", "RowTownhouse", ]
 )
 
 Province = Prompt.ask(
@@ -32,7 +32,7 @@ prices = []
 url = 'https://www.point2homes.com/CA/Real-Estate-Listings/' + Province + '/' + City + '.html?location=Ottawa,%20ON&PropertyType=' + house + '&search_mode=location&SelectedView=listings&LocationGeoId=783093&page='
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'}
 
-
+# may need to change URL if throttled!!!
 page = requests.get(url,headers=headers)
 soup = BeautifulSoup(page.content, 'html.parser')
 number_of_houses = soup.find(id="search_history_form")
@@ -59,6 +59,7 @@ total = 0
 for price in prices:
     total += price
 
+print(prices.sort())
 Average_Price = total / len(prices)
 
 property_table = Table()
