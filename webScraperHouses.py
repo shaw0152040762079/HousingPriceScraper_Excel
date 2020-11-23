@@ -69,7 +69,7 @@ property_table.add_column("Average Price")
 property_table.add_column("Median Price")
 property_table.add_column("Sample Size")
 
-property_table.add_row('Ottawa', '[bold cyan]' + house + '[/bold cyan]', "[bold red]" + str(Average_Price),
+property_table.add_row(City, '[bold cyan]' + house + '[/bold cyan]', "[bold red]" + str(Average_Price),
                        str(statistics.median(prices)), str(len(prices)))
 
 console.print(property_table)
