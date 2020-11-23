@@ -44,17 +44,24 @@ for i in range(pages):
     page = requests.get(url + str(i),headers=headers)
     soup = BeautifulSoup(page.content, 'html.parser')
     pagenum = 1
-    with Bar('Downloading new page', fill='@', suffix='%(percent).1f%% - %(eta)ds') as bar:
-        for spanclass in soup.findAll(class_="green"):
-            sleep(0.01)
-            pagenum+=1
-            bar.next(3.5)
+
+    with Bar('downloading page %d/%d...' % (i, pages), fill='@', suffix='%(percent).1f%% - %(eta)ds') as bar:
+        allHouse = soup.findAll(class_="green")
+        total = len(allHouse)
+        i = 0
+
+        for spanclass in allHouse:
             for span in spanclass.findAll('span'):
                 priceOfHouse = re.findall(r'\d+(?:,\d+)+(?:,\d+)?', str(span))
                 prices.append(int(priceOfHouse[0].replace(',', '')))
 
+            pagenum += 1
+            sleep(0.01) # makes the progress bar more apparent at the cost of 1 millisecond per house
+            bar.next(i / total * 100)
+            i += 1
 
-print('/n')
+
+print('\n')
 
 total = sum(prices)
 
