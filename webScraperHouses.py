@@ -38,18 +38,17 @@ soup = BeautifulSoup(page.content, 'html.parser')
 number_of_houses = soup.find(id="search_history_form")
 number = number_of_houses.find(id='search-history-results')
 
-pages = int(int(number['value']) // 24)
+pages = int(number['value']) // 24
 
 for i in range(pages):
     page = requests.get(url + str(i),headers=headers)
-    print(url+str(i))
     soup = BeautifulSoup(page.content, 'html.parser')
     pagenum = 1
     with Bar('Downloading new page', fill='@', suffix='%(percent).1f%% - %(eta)ds') as bar:
         for spanclass in soup.findAll(class_="green"):
             sleep(0.01)
             pagenum+=1
-            bar.next(3)
+            bar.next(3.5)
             for span in spanclass.findAll('span'):
                 priceOfHouse = re.findall(r'\d+(?:,\d+)+(?:,\d+)?', str(span))
                 prices.append(int(priceOfHouse[0].replace(',', '')))
