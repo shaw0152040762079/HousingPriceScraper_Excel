@@ -34,7 +34,6 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 
 
 page = requests.get(url,headers=headers)
-print(page.content)
 soup = BeautifulSoup(page.content, 'html.parser')
 number_of_houses = soup.find(id="search_history_form")
 number = number_of_houses.find(id='search-history-results')
