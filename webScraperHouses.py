@@ -6,17 +6,13 @@ from rich.table import Table
 from tkinter import *
 import statistics
 from rich.prompt import Prompt
-import progressbar
-import time, sys
-from time import sleep
 from progress.bar import Bar
 
 console = Console()
 
-
 house = Prompt.ask(
-    "What Kind of House are you look for? enter the type",
-    choices=["CondoApartment", "House", "RowTownhouse", ]
+    "What kind of house are you look for ? enter the corresponding code",
+    choices=["House", 'CondoApartment', 'RowTownhouse']
 )
 
 province = Prompt.ask(
@@ -29,30 +25,27 @@ city = Prompt.ask(
 )
 
 prices = []
-url = 'https://www.point2homes.com/CA/Real-Estate-Listings/' + province + '/' + city + '.html?location=' + city +'PropertyType=' + house + '&search_mode=location&SelectedView=listings&page='
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'}
+url = 'https://www.point2homes.com/CA/Real-Estate-Listings/' + province + '/' + city + '.html?location=' + city +'%2C+' +  province +' &PropertyType=' + house +'&search_mode=location&SelectedView=listings&page='
+url_ = 'https://www.point2homes.com/CA/Real-Estate-Listings/NB/Fredericton.html?location=Fredericton%2C+NB&PropertyType=CondoApartment&search_mode=location&page=1&SelectedView=listings&location_changed=&ajax=1'
 
-# may need to change URL if throttled!!!
-page = requests.get(url,headers=headers)
-soup = BeautifulSoup(page.content, 'html.parser')
-number_of_houses = soup.find(id="search_history_form")
-number = number_of_houses.find(id='search-history-results')
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'
+    ,'Cache-Control': 'no-cache'}
 
-pages = int(number['value']) // 24
+num_page = int(input("Enter the number of pages you want to scrape "))
 
-for i in range(pages):
-    page = requests.get(url + str(i),headers=headers)
+print(num_page)
+for i in range(num_page):
+    page = requests.get(url + str(i), headers=headers)
     soup = BeautifulSoup(page.content, 'html.parser')
-    pagenum = 1
+    print(url + str(i))
+
     with Bar('Downloading new page', fill='@', suffix='%(percent).1f%% - %(eta)ds') as bar:
         for spanclass in soup.findAll(class_="green"):
-            sleep(0.01)
-            pagenum+=1
             bar.next(3.5)
             for span in spanclass.findAll('span'):
                 priceOfHouse = re.findall(r'\d+(?:,\d+)+(?:,\d+)?', str(span))
                 prices.append(int(priceOfHouse[0].replace(',', '')))
-
 
 print('/n')
 
@@ -63,12 +56,11 @@ Average_Price = total / len(prices)
 
 property_table = Table()
 property_table.add_column('[bold green]city[/bold green]', style="bold cyan")
-property_table.add_column("House Type")
 property_table.add_column("Average Price")
 property_table.add_column("Median Price")
 property_table.add_column("Sample Size")
 
-property_table.add_row(city, '[bold cyan]' + house + '[/bold cyan]', "[bold red]" + str(Average_Price),
+property_table.add_row('[bold cyan]' + city + '[/bold cyan]', "[bold red]" + str(Average_Price),
                        str(statistics.median(prices)), str(len(prices)))
 
 console.print(property_table)
