@@ -107,9 +107,9 @@ if excel == "Y":
     workbook = Workbook('Output.xlsx')
     worksheet = workbook.add_worksheet()
 
-    head = ["City", "Type_Of_House", "Average", "Median", "Sample_Size", "Date"]
-    for i in range(5):
-        worksheet.write(0, i + 1, head[i])
+    heads = ["City", "Type_Of_House", "Average", "Median", "Sample_Size", "Date"]
+    for i in range(len(heads)):
+        worksheet.write(0, i, heads[i])
 
     mysel = c.execute("select * from House_prices ")
     for i, row in enumerate(mysel):
