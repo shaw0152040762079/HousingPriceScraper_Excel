@@ -27,7 +27,7 @@ city = Prompt.ask(
 )
 
 prices = []
-url = 'https://www.point2homes.com/CA/Real-Estate-Listings/' + province + '/' + city + '.html?location=' + city + '%2C+' + province + ' &PropertyType=' + house + '&search_mode=location&SelectedView=listings&page='
+url = 'https://www.point2homes.com/CA/Real-Estate-Listings/' + province + '/' + city + '.html?location=' + city + '%2C+' + province + '&PropertyType=' + house + '&search_mode=location&SelectedView=listings&page='
 url_ = 'https://www.point2homes.com/CA/Condos-For-Sale/' + province + '/' + city + '.html?page='
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'
@@ -37,7 +37,7 @@ num_page = int(input("Enter the number of pages you want to scrape "))
 
 print(num_page)
 for i in range(num_page):
-    page = requests.get(url_ + str(i), headers=headers)
+    page = requests.get(url + str(i), headers=headers)
     soup = BeautifulSoup(page.content, 'html.parser')
     print(url + str(i))
 
@@ -66,6 +66,8 @@ property_table.add_row('[bold cyan]' + city + '[/bold cyan]', house, "[bold red]
                        str(statistics.median(prices)), str(len(prices)))
 
 console.print(property_table)
+
+print(prices)
 
 save = Prompt.ask(
     "Do you want to save this to the SQLlite database?",
