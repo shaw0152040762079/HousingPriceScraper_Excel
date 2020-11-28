@@ -52,12 +52,12 @@ class Housing:
             soup = BeautifulSoup(page.content, 'html.parser')
             print(Housing.url + str(i+1))
 
-        with Bar('Downloading new page', fill='@', suffix='%(percent).1f%% - %(eta)ds') as bar:
-            for spanclass in soup.findAll(class_="green"):
-                bar.next(3.5)
-                for span in spanclass.findAll('span'):
-                    priceOfHouse = re.findall(r'\d+(?:,\d+)+(?:,\d+)?', str(span))
-                    Housing.prices.append(int(priceOfHouse[0].replace(',', '')))
+            with Bar('Downloading new page', fill='@', suffix='%(percent).1f%% - %(eta)ds') as bar:
+                for spanclass in soup.findAll(class_="green"):
+                    bar.next(3.5)
+                    for span in spanclass.findAll('span'):
+                        priceOfHouse = re.findall(r'\d+(?:,\d+)+(?:,\d+)?', str(span))
+                        Housing.prices.append(int(priceOfHouse[0].replace(',', '')))
 
         print('/n')
 
